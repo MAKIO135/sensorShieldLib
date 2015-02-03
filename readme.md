@@ -11,9 +11,9 @@ ___
 - set your digital/analog pins ranges ( lib is configured by default for UNO )
 - set analog sensitivity ie minimun change on analog captor for sending JSON 
 - automatically reads all digital/analog sensors on update
-- send JSON on changes
-___
-###Example: 
+- send JSON on changes  
+___  
+###Example:   
 // example will be added to repo soon
 
 ![Example](SensorShieldLib.png)
