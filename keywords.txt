@@ -1,0 +1,16 @@
+#########################################
+# Syntax Coloring Map For SensorShieldLib
+#########################################
+
+# Datatypes (KEYWORD1)
+SensorShield 	KEYWORD1
+
+# Methods and Functions (KEYWORD2)
+initialize	KEYWORD2
+setDigitalPinsRange	KEYWORD2
+setAnalogPinsRange	KEYWORD2
+setAnalogSensitivity	KEYWORD2
+addSensor	KEYWORD2
+update	KEYWORD2
+
+# Constants (LITERAL1)
