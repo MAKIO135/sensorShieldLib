@@ -12,9 +12,9 @@ ___
 - set analog sensitivity ie minimun change on analog captor for sending JSON 
 - automatically reads all digital/analog sensors on update
 - send JSON on changes  
-___  
-###Example:   
-// example will be added to repo soon
+
+___
+###Example:
 
 ![Example](SensorShieldLib.png)
 
@@ -49,5 +49,6 @@ Serial will print JSON like `{"btn1":1,"btn2":0,"pot1":768}`
 
 ___
 ###Coming soon
+- Adding example to repo
 - Need integration for Stream selection `#include "HardwareSerial.h"`
 - Suggestions welcome
