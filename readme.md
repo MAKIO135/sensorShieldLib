@@ -50,5 +50,6 @@ Serial will print JSON like `{"btn1":1,"btn2":0,"pot1":768}`
 ___
 ###Coming soon
 - Adding example to repo
+- Adding method to set analogSensitivity for each analog Sensor
 - Need integration for Stream selection `#include "HardwareSerial.h"`
 - Suggestions welcome
