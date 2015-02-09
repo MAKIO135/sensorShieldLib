@@ -1,26 +1,42 @@
 #include "Arduino.h"
+#include "HardwareSerial.h"
 #include "sensorShieldLib.h"
 
 SensorShield::SensorShield(){}
 
-void SensorShield::initialize()
+void SensorShield::initialize(int ledPin )
 {
+	Serial.begin( 9600 );
+	SensorShieldStream = &Serial;
+	SensorShieldStream->println( "{\"hello\":\"Hello SensorShield!\"}" );
+	
+	indicatorLedPin = ledPin;
+
+	initValues();
+}
+
+void SensorShield::initialize(Stream &stream, int ledPin )
+{
+	SensorShieldStream = &stream;
+	SensorShieldStream->println( "{\"hello\":\"Hello SensorShield!\"}" );
+	
+	indicatorLedPin = ledPin;
+
+	initValues();
+}
+
+void SensorShield::initValues(){
 	digitalPinMin = 2;
 	digitalPinMax = 12;
 	analogPinMin = A0;
 	analogPinMax = A5;
-
-	analogSensitivity = 1;
 	
 	nbSensors = 0;
 
-	Serial.begin( 9600 );
-	Serial.println( "Hello SensorShield!" );
-
-	pinMode( 13, OUTPUT );
-	digitalWrite( 13, HIGH );
+	pinMode( indicatorLedPin, OUTPUT );
+	digitalWrite( indicatorLedPin, HIGH );
 	delay( 100 );
-	digitalWrite( 13, LOW );
+	digitalWrite( indicatorLedPin, LOW );
 }
 
 void SensorShield::setDigitalPinsRange( int pinMin, int pinMax )
@@ -37,10 +53,47 @@ void SensorShield::setAnalogPinsRange( int pinMin, int pinMax )
 
 void SensorShield::setAnalogSensitivity( int sensitivity )
 {
-	analogSensitivity = sensitivity;
+	for (int i = 0; i < nbSensors; ++i) {
+		if( sensors[ i ].isDigital == false ) {
+			sensors[ i ].analogSensitivity = sensitivity;
+		}
+	}
 }
 
-void SensorShield::addSensor( String name, int pin, int mode = INPUT )
+void SensorShield::setAnalogSensitivity( String sensorName, int sensitivity )
+{
+	for (int i = 0; i < nbSensors; ++i) {
+		if( sensors[ i ].name == sensorName ) {
+			sensors[ i ].analogSensitivity = sensitivity;
+		}
+	}
+}
+
+void SensorShield::addSensor( String name, int pin )
+{
+	if( ( pin >= digitalPinMin && pin <= digitalPinMax ) 
+		|| ( pin >= analogPinMin && pin <= analogPinMax ) ) {
+		sensors[ nbSensors ].name = name;
+		sensors[ nbSensors ].pin = pin;
+		sensors[ nbSensors ].value = 0;
+
+		if( pin >= digitalPinMin && pin <= digitalPinMax ) {
+			sensors[ nbSensors ].isDigital = true;
+			sensors[ nbSensors ].isInputPullUp = false;
+
+			pinMode( pin, INPUT );
+		}
+		else {
+			sensors[ nbSensors ].isDigital = false;
+			sensors[ nbSensors ].isInputPullUp = false;
+			sensors[ nbSensors ].analogSensitivity = 1;
+		}
+
+		nbSensors++;
+	} 
+}
+
+void SensorShield::addSensor( String name, int pin, int mode )
 {
 	if( ( pin >= digitalPinMin && pin <= digitalPinMax ) 
 		|| ( pin >= analogPinMin && pin <= analogPinMax ) ) {
@@ -63,6 +116,7 @@ void SensorShield::addSensor( String name, int pin, int mode = INPUT )
 		else {
 			sensors[ nbSensors ].isDigital = false;
 			sensors[ nbSensors ].isInputPullUp = false;
+			sensors[ nbSensors ].analogSensitivity = 1;
 		}
 		nbSensors++;
 	} 
@@ -89,7 +143,7 @@ void SensorShield::update()
 		}
 		else {
 			int tmpValue = analogRead( sensors[ i ].pin );
-			if( abs( sensors[ i ].value - tmpValue ) > analogSensitivity ) {
+			if( abs( sensors[ i ].value - tmpValue ) > sensors[ i ].analogSensitivity ) {
 				sensors[ i ].value = tmpValue;
 				hasNewValue = true;
 			}
@@ -109,7 +163,7 @@ void SensorShield::sendMessage()
 	json += "}";
 	Serial.println( json );
 
-	digitalWrite( 13, HIGH );
+	digitalWrite( indicatorLedPin, HIGH );
 	delay( 50 );
-	digitalWrite( 13, LOW );
+	digitalWrite( indicatorLedPin, LOW );
 }
