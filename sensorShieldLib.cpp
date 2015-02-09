@@ -65,6 +65,28 @@ void SensorShield::setAnalogSensitivity( String sensorName, int sensitivity )
 	for (int i = 0; i < nbSensors; ++i) {
 		if( sensors[ i ].name == sensorName ) {
 			sensors[ i ].analogSensitivity = sensitivity;
+			return;
+		}
+	}
+}
+
+void SensorShield::setAnalogLimits( int min, int max )
+{
+	for (int i = 0; i < nbSensors; ++i) {
+		if( sensors[ i ].isDigital == false ) {
+			sensors[ i ].min = min;
+			sensors[ i ].max = max;
+		}
+	}
+}
+
+void SensorShield::setAnalogLimits( String sensorName, int min, int max )
+{
+	for (int i = 0; i < nbSensors; ++i) {
+		if( sensors[ i ].name == sensorName ) {
+			sensors[ i ].min = min;
+			sensors[ i ].max = max;
+			return;
 		}
 	}
 }
@@ -73,20 +95,16 @@ void SensorShield::addSensor( String name, int pin )
 {
 	if( ( pin >= digitalPinMin && pin <= digitalPinMax ) 
 		|| ( pin >= analogPinMin && pin <= analogPinMax ) ) {
+
 		sensors[ nbSensors ].name = name;
 		sensors[ nbSensors ].pin = pin;
 		sensors[ nbSensors ].value = 0;
 
 		if( pin >= digitalPinMin && pin <= digitalPinMax ) {
-			sensors[ nbSensors ].isDigital = true;
-			sensors[ nbSensors ].isInputPullUp = false;
-
-			pinMode( pin, INPUT );
+			addDigitalSensor( pin, INPUT );
 		}
 		else {
-			sensors[ nbSensors ].isDigital = false;
-			sensors[ nbSensors ].isInputPullUp = false;
-			sensors[ nbSensors ].analogSensitivity = 1;
+			addAnalogSensor();
 		}
 
 		nbSensors++;
@@ -97,29 +115,42 @@ void SensorShield::addSensor( String name, int pin, int mode )
 {
 	if( ( pin >= digitalPinMin && pin <= digitalPinMax ) 
 		|| ( pin >= analogPinMin && pin <= analogPinMax ) ) {
+
 		sensors[ nbSensors ].name = name;
 		sensors[ nbSensors ].pin = pin;
 		sensors[ nbSensors ].value = 0;
 
 		if( pin >= digitalPinMin && pin <= digitalPinMax ) {
-			sensors[ nbSensors ].isDigital = true;
-
-			if( mode == INPUT_PULLUP) {
-				sensors[ nbSensors ].isInputPullUp = true;
-			}
-			else {	
-				sensors[ nbSensors ].isInputPullUp = false;
-			}
-
-			pinMode( pin, mode );
+			addDigitalSensor( pin, mode );
 		}
 		else {
-			sensors[ nbSensors ].isDigital = false;
-			sensors[ nbSensors ].isInputPullUp = false;
-			sensors[ nbSensors ].analogSensitivity = 1;
+			addAnalogSensor();
 		}
 		nbSensors++;
 	} 
+}
+
+void SensorShield::addDigitalSensor( int pin, int mode )
+{
+	sensors[ nbSensors ].isDigital = true;
+
+	if( mode == INPUT_PULLUP) {
+		sensors[ nbSensors ].isInputPullUp = true;
+	}
+	else {	
+		sensors[ nbSensors ].isInputPullUp = false;
+	}
+
+	pinMode( pin, mode );
+}
+
+void SensorShield::addAnalogSensor()
+{
+	sensors[ nbSensors ].isDigital = false;
+	sensors[ nbSensors ].isInputPullUp = false;
+	sensors[ nbSensors ].analogSensitivity = 1;
+	sensors[ nbSensors ].min = 0;
+	sensors[ nbSensors ].max = 1023;
 }
 
 void SensorShield::update()
@@ -145,12 +176,17 @@ void SensorShield::update()
 			int tmpValue = analogRead( sensors[ i ].pin );
 			if( abs( sensors[ i ].value - tmpValue ) > sensors[ i ].analogSensitivity ) {
 				sensors[ i ].value = tmpValue;
-				hasNewValue = true;
+				
+				if( sensors[ i ].value >= sensors[ i ].min && sensors[ i ].value <= sensors[ i ].max ){
+					hasNewValue = true;
+				}
 			}
 		}
 	}
 	
-	if( hasNewValue == true) sendMessage();
+	if( hasNewValue == true){
+		sendMessage();
+	}
 }
 
 void SensorShield::sendMessage()
