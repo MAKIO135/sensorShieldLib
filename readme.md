@@ -49,5 +49,5 @@ Serial will print JSON like `{"btn1":1,"btn2":0,"pot1":768}`
 
 ___
 ###Coming soon
-.Support for ethernetShield compatibility
-.examples
+- Support for ethernetShield compatibility
+- examples
