@@ -30,7 +30,7 @@ ___
 ___
 ###Example:
 
-![Example](SensorShieldLib.png)
+![Example](examples/SensorShield101/SensorShieldLib.png)
 
 ```
 #include <sensorShieldLib.h>
