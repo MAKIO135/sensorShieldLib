@@ -6,11 +6,14 @@
 SensorShield 	KEYWORD1
 
 # Methods and Functions (KEYWORD2)
-initialize	KEYWORD2
+init	KEYWORD2
 setDigitalPinsRange	KEYWORD2
 setAnalogPinsRange	KEYWORD2
-setAnalogSensitivity	KEYWORD2
 addSensor	KEYWORD2
+setAnalogSensitivity	KEYWORD2
+setAnalogLimits	KEYWORD2
 update	KEYWORD2
+emitLightOnChange	KEYWORD2
+JSONMessage	KEYWORD2
 
 # Constants (LITERAL1)

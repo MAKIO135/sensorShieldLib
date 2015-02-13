@@ -9,7 +9,7 @@
 
 struct sensorStruct
 {
-	String name;
+	String sensorID;
 	int pin;
 	bool isDigital;
 	bool isInputPullUp;
@@ -24,34 +24,52 @@ class SensorShield
 	public:
 		SensorShield();
 
-		void initialize( int ledPin );
-		void initialize( Stream &stream, int ledPin );
+		void init();
+		void init( Stream &stream );
+
 		void setDigitalPinsRange( int pinMin, int pinMax );
 		void setAnalogPinsRange( int pinMin, int pinMax );
+
+		void addSensor( String sensorID, int pin);
+		void addSensor( String sensorID, int pin, int mode );
+
 		void setAnalogSensitivity( int sensitivity );
-		void setAnalogSensitivity( String sensor, int sensitivity );
+		void setAnalogSensitivity( String sensorID, int sensitivity );
+
 		void setAnalogLimits( int min, int max );
-		void setAnalogLimits( String sensorName, int min, int max );
-		void addSensor( String name, int pin);
-		void addSensor( String name, int pin, int mode );
+		void setAnalogLimits( String sensorID, int min, int max );
+
+		void emitLightOnChange( int ledPin );
+		void emitLightOnChange( bool turnLightOn );
+
 		void update();
+
+		bool hasNewValue;
+		String JSONMessage;
 
 	private:
 		Stream * SensorShieldStream;
-		
-		int indicatorLedPin;
+
 		int digitalPinMin;
 		int digitalPinMax;
 		int analogPinMin;
 		int analogPinMax;
+		
 		int nbSensors;
-		bool hasNewValue;
+		
+		int analogSensitivity;
+		int analogMin;
+		int analogMax;
 
-		// vector<sensorStruct> sensors;
-		sensorStruct sensors[30];
+		int indicatorLedPin;
+		bool turnLightOn;
+
+		sensorStruct sensors[ 30 ];
 
 		void initValues();
 		void addDigitalSensor( int pin, int mode );
 		void addAnalogSensor();
-		void sendMessage();
+		void lightup();
+		void createJSON();
+		void sendJSON();
 };
