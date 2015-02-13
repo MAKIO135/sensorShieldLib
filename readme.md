@@ -69,5 +69,4 @@ void loop()
 
 ___
 ###Coming soon
-- Support for ethernetShield compatibility
-- examples
+- example with ethernetShield
