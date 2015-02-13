@@ -12,10 +12,10 @@ ___
 - suport different Stream ```Serial.begin(9600); board.init(Serial);```
 - set your digital/analog pins ranges ( lib is configured by default for UNO )
 - easy sensor attach with auto recognition for analog/digital read ```board.addSensor("btn1", 2); board.addSensor("pot1", A0);```
-- support INPUT\_PULLUP pinMode ```board.addSensor("btn2", 8, INPUT\_PULLUP)```
-- set analog sensitivity ie minimun change on analog captor for sending JSON for all analog sensors ```board.setAnalogSensititvity(5)```
+- support INPUT\_PULLUP pinMode ```board.addSensor("btn2", 8, INPUT\_PULLUP);```
+- set analog sensitivity (ie minimun change on analog captor for sending JSON) for all analog sensors ```board.setAnalogSensititvity(5);```
 - or set analog sensitivity for a particular analog sensor ```board.setAnalogSensitivity("pot1", 10);```
-- reads all digital/analog sensors on update and automatically send JSON on changes ```board.update()```
+- reads all digital/analog sensors on update and automatically send JSON on changes ```board.update();```
 
 ___
 ###Example:
