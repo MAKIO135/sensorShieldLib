@@ -144,6 +144,7 @@ void SensorShield::setAnalogLimits( String sensorID, int min, int max )
 void SensorShield::emitLightOnChange( int ledPin )
 {
 	indicatorLedPin = ledPin;
+	pinMode( indicatorLedPin, OUTPUT );
 	turnLightOn = true;
 	lightup();
 }
