@@ -233,3 +233,13 @@ void SensorShield::sendJSON()
 
 	if( turnLightOn && indicatorLedPin != NULL) lightup();
 }
+
+/////////////////////////////////////////////////////////////////////
+int SensorShield::getSensorValue( String sensorID )
+{
+	for (int i = 0; i < nbSensors; ++i) {
+		if( sensors[ i ].sensorID == sensorID ) {
+			return sensors[ i ].value;
+		}
+	}
+}

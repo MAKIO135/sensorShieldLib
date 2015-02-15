@@ -15,6 +15,8 @@ setAnalogLimits	KEYWORD2
 invertSensorValue	KEYWORD2
 update	KEYWORD2
 emitLightOnChange	KEYWORD2
+getSensorValue	KEYWORD2
 JSONMessage	KEYWORD2
+hasNewValue	KEYWORD2
 
 # Constants (LITERAL1)
