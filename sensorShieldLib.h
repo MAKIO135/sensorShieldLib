@@ -12,7 +12,7 @@ struct sensorStruct
 	String sensorID;
 	int pin;
 	bool isDigital;
-	bool isInputPullUp;
+	bool invertValue;
 	int analogSensitivity;
 	int value;
 	int min;
@@ -38,6 +38,8 @@ class SensorShield
 
 		void setAnalogLimits( int min, int max );
 		void setAnalogLimits( String sensorID, int min, int max );
+
+		void invertSensorValue( String sensorID );
 
 		void emitLightOnChange( int ledPin );
 		void emitLightOnChange( bool turnLightOn );

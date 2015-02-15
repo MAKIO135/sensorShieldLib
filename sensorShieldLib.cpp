@@ -77,10 +77,10 @@ void SensorShield::addDigitalSensor( int pin, int pinmode )
 	sensors[ nbSensors ].isDigital = true;
 
 	if( pinmode == INPUT_PULLUP) {
-		sensors[ nbSensors ].isInputPullUp = true;
+		sensors[ nbSensors ].invertValue = true;
 	}
 	else {	
-		sensors[ nbSensors ].isInputPullUp = false;
+		sensors[ nbSensors ].invertValue = false;
 	}
 
 	pinMode( pin, pinmode );
@@ -89,7 +89,7 @@ void SensorShield::addDigitalSensor( int pin, int pinmode )
 void SensorShield::addAnalogSensor()
 {
 	sensors[ nbSensors ].isDigital = false;
-	sensors[ nbSensors ].isInputPullUp = false;
+	sensors[ nbSensors ].invertValue = false;
 	sensors[ nbSensors ].analogSensitivity = analogSensitivity;
 	sensors[ nbSensors ].min = analogMin;
 	sensors[ nbSensors ].max = analogMax;
@@ -111,6 +111,17 @@ void SensorShield::setAnalogSensitivity( String sensorID, int sensitivity )
 	for (int i = 0; i < nbSensors; ++i) {
 		if( sensors[ i ].sensorID == sensorID ) {
 			sensors[ i ].analogSensitivity = sensitivity;
+			return;
+		}
+	}
+}
+
+/////////////////////////////////////////////////////////////////////
+void SensorShield::invertSensorValue( String sensorID )
+{
+	for (int i = 0; i < nbSensors; ++i) {
+		if( sensors[ i ].sensorID == sensorID ) {
+			sensors[ i ].invertValue = true;
 			return;
 		}
 	}
@@ -169,7 +180,7 @@ void SensorShield::update()
 
 	for (int i = 0; i < nbSensors; ++i) {
 		if( sensors[ i ].isDigital == true ) {
-			if( sensors[ i ].isInputPullUp == true ) {
+			if( sensors[ i ].invertValue == true ) {
 				tmpValue = 1 - digitalRead( sensors[ i ].pin );
 			}
 			else {	
@@ -182,7 +193,13 @@ void SensorShield::update()
 			}
 		}
 		else {
-			tmpValue = analogRead( sensors[ i ].pin );
+			if( sensors[ i ].invertValue == true ) {
+				tmpValue = 1023 - analogRead( sensors[ i ].pin );
+			}
+			else {	
+				tmpValue = analogRead( sensors[ i ].pin );
+			}
+
 			if( abs( sensors[ i ].value - tmpValue ) > sensors[ i ].analogSensitivity ) {
 				sensors[ i ].value = tmpValue;
 				
