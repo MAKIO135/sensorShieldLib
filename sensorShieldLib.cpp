@@ -60,6 +60,7 @@ void SensorShield::addSensor( String sensorID, int pin, int pinmode )
 		sensors[ nbSensors ].sensorID = sensorID;
 		sensors[ nbSensors ].pin = pin;
 		sensors[ nbSensors ].value = 0;
+		sensors[ nbSensors ].hasCustomFunction = 0;
 
 		if( pin >= digitalPinMin && pin <= digitalPinMax ) {
 			addDigitalSensor( pin, pinmode );
@@ -152,6 +153,28 @@ void SensorShield::setAnalogLimits( String sensorID, int min, int max )
 }
 
 /////////////////////////////////////////////////////////////////////
+void SensorShield::setSensorFunction( String sensorID, int( *custFunction )( int ) )
+{
+	for (int i = 0; i < nbSensors; ++i) {
+		if( sensors[ i ].sensorID == sensorID ) {
+			sensors[ i ].hasCustomFunction = 1;
+			sensors[ i ].customInt = custFunction;
+			return;
+		}
+	}
+}
+
+void SensorShield::setSensorFunction( String sensorID, float( *custFunction )( int ) )
+{
+	for (int i = 0; i < nbSensors; ++i) {
+		if( sensors[ i ].sensorID == sensorID ) {
+			sensors[ i ].hasCustomFunction = 2;
+			sensors[ i ].customFloat = custFunction;
+			return;
+		}
+	}
+}
+/////////////////////////////////////////////////////////////////////
 void SensorShield::emitLightOnChange( int ledPin )
 {
 	indicatorLedPin = ledPin;
@@ -220,7 +243,18 @@ void SensorShield::createJSON()
 	JSONMessage = "{";
 	for ( int i = 0; i < nbSensors; ++i ) {
 		if( i != 0) JSONMessage += ",";
-		JSONMessage += "\"" + sensors[ i ].sensorID + "\":" + sensors[ i ].value;
+		
+		JSONMessage += "\"" + sensors[ i ].sensorID;
+
+		if( sensors[ i ].hasCustomFunction == 0 ){
+			JSONMessage += "\":" + sensors[ i ].value;
+		}
+		else if( sensors[ i ].hasCustomFunction == 1 ){
+			JSONMessage += "\":" + String( ( *(sensors[i].customInt) )( sensors[ i ].value ) );
+		}
+		else if( sensors[ i ].hasCustomFunction == 2 ){
+			JSONMessage += "\":" + String( ( *(sensors[i].customFloat) )( sensors[ i ].value ) );
+		}
 	}
 	JSONMessage += "}";
 }

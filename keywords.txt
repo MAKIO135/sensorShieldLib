@@ -13,6 +13,7 @@ addSensor	KEYWORD2
 setAnalogSensitivity	KEYWORD2
 setAnalogLimits	KEYWORD2
 invertSensorValue	KEYWORD2
+setSensorFunction	KEYWORD2
 update	KEYWORD2
 emitLightOnChange	KEYWORD2
 getSensorValue	KEYWORD2

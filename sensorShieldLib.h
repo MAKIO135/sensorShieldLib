@@ -7,6 +7,8 @@
 
 #include "Arduino.h"
 
+#define MAX_NUMBER_OF_SENSORS 30
+
 struct sensorStruct
 {
 	String sensorID;
@@ -17,6 +19,9 @@ struct sensorStruct
 	int value;
 	int min;
 	int max;
+	char hasCustomFunction;
+	int (*customInt)(int);
+	float (*customFloat)(int);
 };
 
 class SensorShield
@@ -40,6 +45,9 @@ class SensorShield
 		void setAnalogLimits( String sensorID, int min, int max );
 
 		void invertSensorValue( String sensorID );
+
+		void setSensorFunction( String sensorID, int( *custFunction )( int ) );
+		void setSensorFunction( String sensorID, float( *custFunction )( int ) );
 
 		void emitLightOnChange( int ledPin );
 		void emitLightOnChange( bool turnLightOn );
@@ -68,7 +76,7 @@ class SensorShield
 		int indicatorLedPin;
 		bool turnLightOn;
 
-		sensorStruct sensors[ 30 ];
+		sensorStruct sensors[ MAX_NUMBER_OF_SENSORS ];
 
 		void initValues();
 		void addDigitalSensor( int pin, int mode );
