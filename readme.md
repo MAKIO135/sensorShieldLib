@@ -53,7 +53,6 @@ ___
 
 ___
 ###Coming soon
-- example with ethernetShield
 - example with setSensorFunction
 - probably will add Capacitive Sensors Without Hardware
 - proprer documentation

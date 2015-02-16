@@ -244,16 +244,16 @@ void SensorShield::createJSON()
 	for ( int i = 0; i < nbSensors; ++i ) {
 		if( i != 0) JSONMessage += ",";
 		
-		JSONMessage += "\"" + sensors[ i ].sensorID;
+		JSONMessage += "\"" + sensors[ i ].sensorID + "\":";
 
 		if( sensors[ i ].hasCustomFunction == 0 ){
-			JSONMessage += "\":" + sensors[ i ].value;
+			JSONMessage +=  String( sensors[ i ].value );
 		}
 		else if( sensors[ i ].hasCustomFunction == 1 ){
-			JSONMessage += "\":" + String( ( *(sensors[i].customInt) )( sensors[ i ].value ) );
+			JSONMessage += String( ( *(sensors[i].customInt) )( sensors[ i ].value ) );
 		}
 		else if( sensors[ i ].hasCustomFunction == 2 ){
-			JSONMessage += "\":" + String( ( *(sensors[i].customFloat) )( sensors[ i ].value ) );
+			JSONMessage += String( ( *(sensors[i].customFloat) )( sensors[ i ].value ) );
 		}
 	}
 	JSONMessage += "}";
