@@ -1,10 +1,15 @@
+/*
+ Lionel Radisson @Makio135
+ O2/2015
+*/
+
 #include <sensorShieldLib.h>
 
 SensorShield board;
 
 void setup()
 {
-    board.init(); // always needed first, initialises some values and start Serial with 9600 baudrate
+    board.init(); // always needed first, initialises and start Serial with 9600 baudrate
 
     // you can set digital/analog pins ranges if working with a board different from Arduino UNO configuration
     // example with arduino MEGA:

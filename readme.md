@@ -27,15 +27,10 @@ void loop()
 	board.update(); 
 }
 ```
-On `board.update();`, the lib checks sensors values and if any changed from previous `loop`, outputs JSON: `{"btn1":1,"btn2":0,"pot1":768}`
+On `board.update();`, the lib checks sensors values and if any changed from previous `loop`, outputs JSON on Serial 9600 bds: `{"btn1":1,"btn2":0,"pot1":768}`
 
 ___
 ###Features
-- a SensorShield class: `SensorShield board;`
-- simple initialisation: `board.init();`
-- support initialisation with different Stream: `Serial.begin( 115200 ); board.init( Serial );`
-- set your digital/analog pins ranges ( lib is configured by default for UNO ): `board.setDigitalPinsRange( 5, 10 );`
-- easy sensor attach with auto recognition for analog/digital read: `board.addSensor( "btn1", 2 ); board.addSensor( "pot1", A0 );`
 - a SensorShield class: `SensorShield board;`
 - simple initialisation: `board.init();`
 - support initialisation with different Stream: `Serial.begin( 115200 ); board.init( Serial );`
