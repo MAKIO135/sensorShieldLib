@@ -19,7 +19,7 @@ void setup(){
     board.init();
 
     board.addSensor( "LM35", A0 );
-    board.setAnalogSensitivity( 3 );
+    board.setSensorSensitivity( 3 );
     board.setSensorFunction( "LM35", computeTemp );
 }
 

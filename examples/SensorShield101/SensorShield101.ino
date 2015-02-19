@@ -22,7 +22,7 @@ void setup()
     board.addSensor( "pot1", A0 );
 
     // set minimal change on analog sensors 
-    board.setAnalogSensitivity( 10 );
+    board.setSensorSensitivity( 10 );
 
     // connect a led that will lightup when sending JSON
     board.emitLightOnChange( 13 );

@@ -36,8 +36,8 @@ void setup(){
     board.init();
     board.addSensor( "btn", 2 );
     board.addSensor( "pot", A0 );
-    board.setAnalogSensitivity( "pot", 2 );
-    board.emitLightOnChange(8);
+    board.setSensorSensitivity( "pot", 2 );
+    board.emitLightOnChange( 8 );
 
     Serial.print( "server is at " );
     Serial.println( Ethernet.localIP() );
