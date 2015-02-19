@@ -15,13 +15,16 @@ struct sensorStruct
 	int pin;
 	bool isDigital;
 	bool invertValue;
-	int analogSensitivity;
+	float analogSensitivity;
 	int value;
+	float fValue;
 	int min;
 	int max;
 	char hasCustomFunction;
 	int (*customInt)(int);
 	float (*customFloat)(int);
+	int (*customSensorInt)();
+	float (*customSensorFloat)();
 };
 
 class SensorShield
@@ -38,11 +41,14 @@ class SensorShield
 		void addSensor( String sensorID, int pin);
 		void addSensor( String sensorID, int pin, int mode );
 
-		void setAnalogSensitivity( int sensitivity );
-		void setAnalogSensitivity( String sensorID, int sensitivity );
+		void addSensor( String sensorID, int( *custFunction )() );
+		void addSensor( String sensorID, float( *custFunction )() );
 
-		void setAnalogLimits( int min, int max );
-		void setAnalogLimits( String sensorID, int min, int max );
+		void setSensorSensitivity( float sensitivity );
+		void setSensorSensitivity( String sensorID, float sensitivity );
+
+		void setSensorLimits( int min, int max );
+		void setSensorLimits( String sensorID, int min, int max );
 
 		void invertSensorValue( String sensorID );
 

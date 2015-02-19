@@ -37,10 +37,10 @@ ___
 - set your digital/analog pins ranges ( lib is configured by default for UNO ): `board.setDigitalPinsRange( 5, 10 );`
 - easy sensor attach with auto recognition for analog/digital read: `board.addSensor( "btn1", 2 ); board.addSensor( "pot1", A0 );`
 - support INPUT\_PULLUP pinMode for digital sensors: `board.addSensor( "btn2", 8, INPUT\_PULLUP );`
-- set analog sensitivity (ie minimun change on analog captor for sending JSON) for all analog sensors: `board.setAnalogSensititvity(5);`
-- or set analog sensitivity for a particular analog sensor: `board.setAnalogSensitivity( "pot1", 10 );`
-- set limit values of interest for all analog sensors: `board.setAnalogLimits( 150, 850 );`
-- or for a particular one: `board.setAnalogLimits( "pot1", 150, 850 );`
+- set analog sensitivity (ie minimun change on analog captor for sending JSON) for all analog sensors: `board.setSensorSensititvity(5);`
+- or set analog sensitivity for a particular analog sensor: `board.setSensorSensititvity( "pot1", 10 );`
+- set limit values of interest for all analog sensors: `board.setSensorLimits( 150, 850 );`
+- or for a particular one: `board.setSensorLimits( "pot1", 150, 850 );`
 - reads all digital/analog sensors on update and automatically send JSON on changes: `board.update();`
 - possibility to add a visual signal when sending JSON with a led: `board.emitlightOnChange( 13 );`
 - public access to boolean hasNewValue: `if( board.hasNewValue == true ) { ...... }`
@@ -49,5 +49,5 @@ ___
 ___
 ###Coming soon
 - example with setSensorFunction
-- probably will add Capacitive Sensors Without Hardware
+- example with addCustomSensor
 - proprer documentation
