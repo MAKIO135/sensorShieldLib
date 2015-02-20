@@ -1,5 +1,5 @@
 #SensorShieldLib  
-Easilly communicate sensors value in JSON.  
+Easilly attach and communicate sensors value in JSON.  
 ___
 ![SensorShield](SensorShield.jpg)
 
