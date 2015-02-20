@@ -56,7 +56,7 @@ SensorShield board;
 ```
 - Support INPUT\_PULLUP pinMode for digital sensors:
 ```
-	board.addSensor( "btn2", 8, INPUT\_PULLUP );
+	board.addSensor( "btn2", 8, INPUT_PULLUP );
 ```
 - Use an int or float function as a sensor:
 ```
@@ -72,6 +72,7 @@ float multBy2( int value ){
 	return value * 2;
 }
 ...
+	board.addSensor( "pot1", A0 );
 	board.setSensorFunction( "pot1", multBy2 );
 ```
 - Set minimun change needed on sensor value before updating its value and sending JSON:
