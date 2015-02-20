@@ -1,6 +1,11 @@
 /*
- Lionel Radisson @Makio135
- O2/2015
+ SensorShieldlib
+ Lionel Radisson - @Makio135
+ ***************************
+
+ SensorShield101
+ ***************
+ Basic example for SensorShieldLib
 */
 
 #include <sensorShieldLib.h>
@@ -21,10 +26,10 @@ void setup()
     board.addSensor( "btn2", 8, INPUT_PULLUP );
     board.addSensor( "pot1", A0 );
 
-    // set minimal change on analog sensors 
-    board.setSensorSensitivity( 10 );
+    // set minimal change on analog sensor before updating its value 
+    board.setSensorSensitivity( "pot1", 10 );
 
-    // connect a led that will lightup when sending JSON
+    // connect a led on pin 13 that will lightup when sending JSON
     board.emitLightOnChange( 13 );
 }
 
