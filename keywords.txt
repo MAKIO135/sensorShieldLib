@@ -10,7 +10,6 @@ init	KEYWORD2
 setDigitalPinsRange	KEYWORD2
 setAnalogPinsRange	KEYWORD2
 addSensor	KEYWORD2
-addCustomSensor	KEYWORD2
 setSensorSensitivity	KEYWORD2
 setSensorLimits	KEYWORD2
 invertSensorValue	KEYWORD2

@@ -41,7 +41,7 @@ ___
 - easy sensor attach with auto recognition for analog/digital read: `board.addSensor( "btn1", 2 ); board.addSensor( "pot1", A0 );`
 - support INPUT\_PULLUP pinMode for digital sensors: `board.addSensor( "btn2", 8, INPUT\_PULLUP );`
 
-- set analog sensitivity (ie minimun change on analog captor for sending JSON) for a particular sensor: `board.setSensorSensititvity( "pot1", 10 );`
+- set analog sensitivity (ie minimun change on analog captor for sending JSON) for a particular sensor: `board.setSensorSensitivity( "pot1", 10 );`
 - set limit values of interest for a particular sensor: `board.setSensorLimits( "pot1", 150, 850 );`
 
 - reads all digital/analog sensors on update and automatically send JSON on changes: `board.update();`
