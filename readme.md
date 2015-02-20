@@ -83,9 +83,13 @@ float multBy2( int value ){
 ```
 	board.setSensorLimits( "pot1", 150, 850 );
 ```
-- Possibility to add a visual signal when sending JSON with a led:
+- Possibility to add a visual signal when sending JSON with a led ...:
 ```
 	board.emitlightOnChange( 13 );
+```
+- ... And to turn it on/off if desired:
+```
+	board.emitlightOnChange( false );
 ```
 - Reads all digital/analog sensors on update and automatically send JSON on changes:
 ```
