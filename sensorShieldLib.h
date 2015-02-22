@@ -9,6 +9,14 @@
 
 #define MAX_NUMBER_OF_SENSORS 30
 
+enum SensorType {
+	SIMPLE, // simple analog/digital sensor
+	INT_PROCESS_VALUE, // sensor with an integer process function 
+	FLOAT_PROCESS_VALUE, // sensor with a float process function 
+	INT_FUNCTION, // integer function working as sensor
+	FLOAT_FUNCTION // float function working as sensor
+};
+
 struct sensorStruct
 {
 	String sensorID;
@@ -20,7 +28,7 @@ struct sensorStruct
 	float fValue;
 	int min;
 	int max;
-	char hasCustomFunction;
+	SensorType type;
 	int (*customInt)(int);
 	float (*customFloat)(int);
 	int (*customSensorInt)();
@@ -52,8 +60,8 @@ class SensorShield
 
 		void invertSensorValue( String sensorID );
 
-		void setSensorFunction( String sensorID, int( *custFunction )( int ) );
-		void setSensorFunction( String sensorID, float( *custFunction )( int ) );
+		void setSensorProcess( String sensorID, int( *custFunction )( int ) );
+		void setSensorProcess( String sensorID, float( *custFunction )( int ) );
 
 		void emitLightOnChange( int ledPin );
 		void emitLightOnChange( bool turnLightOn );

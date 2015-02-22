@@ -61,7 +61,7 @@ void SensorShield::addSensor( String sensorID, int pin, int pinmode )
 		sensors[ nbSensors ].pin = pin;
 		sensors[ nbSensors ].value = 0;
 		sensors[ nbSensors ].fValue = 0;
-		sensors[ nbSensors ].hasCustomFunction = 0;
+		sensors[ nbSensors ].type = SIMPLE;
 
 		if( pin >= digitalPinMin && pin <= digitalPinMax ) {
 			addDigitalSensor( pin, pinmode );
@@ -101,7 +101,7 @@ void SensorShield::addAnalogSensor()
 void SensorShield::addSensor( String sensorID, int( *custFunction )() ){
 	sensors[ nbSensors ].sensorID = sensorID;
 	sensors[ nbSensors ].value = 0;
-	sensors[ nbSensors ].hasCustomFunction = 3;
+	sensors[ nbSensors ].type = INT_FUNCTION;
 	sensors[ nbSensors ].customSensorInt = custFunction;
 	nbSensors++;
 }
@@ -109,7 +109,7 @@ void SensorShield::addSensor( String sensorID, int( *custFunction )() ){
 void SensorShield::addSensor( String sensorID, float( *custFunction )() ){
 	sensors[ nbSensors ].sensorID = sensorID;
 	sensors[ nbSensors ].fValue = 0;
-	sensors[ nbSensors ].hasCustomFunction = 4;
+	sensors[ nbSensors ].type = FLOAT_FUNCTION;
 	sensors[ nbSensors ].customSensorFloat = custFunction;
 	nbSensors++;
 }
@@ -171,22 +171,22 @@ void SensorShield::setSensorLimits( String sensorID, int min, int max )
 }
 
 /////////////////////////////////////////////////////////////////////
-void SensorShield::setSensorFunction( String sensorID, int( *custFunction )( int ) )
+void SensorShield::setSensorProcess( String sensorID, int( *custFunction )( int ) )
 {
 	for (int i = 0; i < nbSensors; ++i) {
 		if( sensors[ i ].sensorID == sensorID ) {
-			sensors[ i ].hasCustomFunction = 1;
+			sensors[ i ].type = INT_PROCESS_VALUE;
 			sensors[ i ].customInt = custFunction;
 			return;
 		}
 	}
 }
 
-void SensorShield::setSensorFunction( String sensorID, float( *custFunction )( int ) )
+void SensorShield::setSensorProcess( String sensorID, float( *custFunction )( int ) )
 {
 	for (int i = 0; i < nbSensors; ++i) {
 		if( sensors[ i ].sensorID == sensorID ) {
-			sensors[ i ].hasCustomFunction = 2;
+			sensors[ i ].type = FLOAT_PROCESS_VALUE;
 			sensors[ i ].customFloat = custFunction;
 			return;
 		}
@@ -222,100 +222,106 @@ void SensorShield::update()
 	float fTmpValue;
 
 	for (int i = 0; i < nbSensors; ++i) {
-		if( sensors[ i ].hasCustomFunction == 0){
-			if( sensors[ i ].isDigital == true ) {
-				if( sensors[ i ].invertValue == true ) {
-					tmpValue = 1 - digitalRead( sensors[ i ].pin );
+		switch( sensors[ i ].type ){	
+			case SIMPLE :
+				if( sensors[ i ].isDigital == true ) {
+					if( sensors[ i ].invertValue == true ) {
+						tmpValue = 1 - digitalRead( sensors[ i ].pin );
+					}
+					else {
+						tmpValue = digitalRead( sensors[ i ].pin );
+					}
+
+					if( sensors[ i ].value != tmpValue ) {
+						sensors[ i ].value = tmpValue;
+						hasNewValue = true;
+					}
 				}
 				else {
+					if( sensors[ i ].invertValue == true ) {
+						tmpValue = 1023 - analogRead( sensors[ i ].pin );
+					}
+					else {	
+						tmpValue = analogRead( sensors[ i ].pin );
+					}
+
+					if( abs( sensors[ i ].value - tmpValue ) >= sensors[ i ].analogSensitivity ) {
+						sensors[ i ].value = tmpValue;
+						
+						if( sensors[ i ].value >= sensors[ i ].min && sensors[ i ].value <= sensors[ i ].max ) {
+							hasNewValue = true;
+						}
+					}
+				}
+				break;
+
+			case INT_PROCESS_VALUE :
+				if( sensors[ i ].isDigital == true ) {
 					tmpValue = digitalRead( sensors[ i ].pin );
-				}
+					tmpValue = ( *(sensors[i].customInt) )( tmpValue );
 
-				if( sensors[ i ].value != tmpValue ) {
-					sensors[ i ].value = tmpValue;
-					hasNewValue = true;
+					if( sensors[ i ].value != tmpValue ) {
+						sensors[ i ].value = tmpValue;
+						hasNewValue = true;
+					}
 				}
-			}
-			else {
-				if( sensors[ i ].invertValue == true ) {
-					tmpValue = 1023 - analogRead( sensors[ i ].pin );
-				}
-				else {	
+				else {
 					tmpValue = analogRead( sensors[ i ].pin );
-				}
+					tmpValue = ( *(sensors[i].customInt) )( tmpValue );
 
-				if( abs( sensors[ i ].value - tmpValue ) > sensors[ i ].analogSensitivity ) {
-					sensors[ i ].value = tmpValue;
-					
-					if( sensors[ i ].value >= sensors[ i ].min && sensors[ i ].value <= sensors[ i ].max ) {
+					if( abs( sensors[ i ].value - tmpValue ) >= sensors[ i ].analogSensitivity ) {
+						sensors[ i ].value = tmpValue;
+						
+						if( sensors[ i ].value >= sensors[ i ].min && sensors[ i ].value <= sensors[ i ].max ) {
+							hasNewValue = true;
+						}
+					}
+				}
+				break;
+
+			case FLOAT_PROCESS_VALUE :
+				if( sensors[ i ].isDigital == true ) {
+					tmpValue = digitalRead( sensors[ i ].pin );
+					fTmpValue = ( *(sensors[i].customFloat) )( tmpValue );
+
+					if( sensors[ i ].fValue != fTmpValue ) {
+						sensors[ i ].fValue = fTmpValue;
 						hasNewValue = true;
 					}
 				}
-			}
-		}
-		else if( sensors[ i ].hasCustomFunction == 1 ){
-			if( sensors[ i ].isDigital == true ) {
-				tmpValue = digitalRead( sensors[ i ].pin );
-				tmpValue = ( *(sensors[i].customInt) )( tmpValue );
+				else {
+					tmpValue = analogRead( sensors[ i ].pin );
+					fTmpValue = ( *(sensors[i].customFloat) )( tmpValue );
 
-				if( sensors[ i ].value != tmpValue ) {
+					if( abs( sensors[ i ].fValue - fTmpValue ) >= sensors[ i ].analogSensitivity ) {
+						sensors[ i ].fValue = fTmpValue;
+						
+						if( sensors[ i ].fValue >= sensors[ i ].min && sensors[ i ].fValue <= sensors[ i ].max ) {
+							hasNewValue = true;
+						}
+					}
+				}
+				break;
+
+			case INT_FUNCTION :
+				tmpValue = ( *(sensors[i].customSensorInt) )();
+
+				if( abs( sensors[ i ].value - tmpValue ) >= sensors[ i ].analogSensitivity ) {
 					sensors[ i ].value = tmpValue;
+					
 					hasNewValue = true;
 				}
-			}
-			else {
-				tmpValue = analogRead( sensors[ i ].pin );
-				tmpValue = ( *(sensors[i].customInt) )( tmpValue );
+				break;
 
-				if( abs( sensors[ i ].value - tmpValue ) > sensors[ i ].analogSensitivity ) {
-					sensors[ i ].value = tmpValue;
-					
-					if( sensors[ i ].value >= sensors[ i ].min && sensors[ i ].value <= sensors[ i ].max ) {
-						hasNewValue = true;
-					}
-				}
-			}
-		}
-		else if( sensors[ i ].hasCustomFunction == 2 ){
-			if( sensors[ i ].isDigital == true ) {
-				tmpValue = digitalRead( sensors[ i ].pin );
-				fTmpValue = ( *(sensors[i].customFloat) )( tmpValue );
+			case FLOAT_FUNCTION :
+				fTmpValue = ( *(sensors[i].customSensorFloat) )() ;
 
-				if( sensors[ i ].fValue != fTmpValue ) {
+				if( abs( sensors[ i ].fValue - fTmpValue ) >= sensors[ i ].analogSensitivity ) {
 					sensors[ i ].fValue = fTmpValue;
+					
 					hasNewValue = true;
 				}
-			}
-			else {
-				tmpValue = analogRead( sensors[ i ].pin );
-				fTmpValue = ( *(sensors[i].customFloat) )( tmpValue );
-
-				if( abs( sensors[ i ].fValue - fTmpValue ) > sensors[ i ].analogSensitivity ) {
-					sensors[ i ].fValue = fTmpValue;
-					
-					if( sensors[ i ].fValue >= sensors[ i ].min && sensors[ i ].fValue <= sensors[ i ].max ) {
-						hasNewValue = true;
-					}
-				}
-			}
-		}
-		else if( sensors[ i ].hasCustomFunction == 3 ){
-			tmpValue = ( *(sensors[i].customSensorInt) )();
-
-			if( abs( sensors[ i ].value - tmpValue ) > sensors[ i ].analogSensitivity ) {
-				sensors[ i ].value = tmpValue;
-				
-				hasNewValue = true;
-			}
-		}
-		else if( sensors[ i ].hasCustomFunction == 4 ){
-			fTmpValue = ( *(sensors[i].customSensorFloat) )() ;
-
-			if( abs( sensors[ i ].fValue - fTmpValue ) > sensors[ i ].analogSensitivity ) {
-				sensors[ i ].fValue = fTmpValue;
-				
-				hasNewValue = true;
-			}
+				break;
 		}
 	}
 	
@@ -332,13 +338,13 @@ void SensorShield::createJSON()
 		
 		JSONMessage += "\"" + sensors[ i ].sensorID + "\":";
 
-		if( sensors[ i ].hasCustomFunction == 0
-			|| sensors[ i ].hasCustomFunction == 1
-			|| sensors[ i ].hasCustomFunction == 3 ){
+		if( sensors[ i ].type == 0
+			|| sensors[ i ].type == 1
+			|| sensors[ i ].type == 3 ){
 			JSONMessage += String( sensors[ i ].value );
 		}
-		else if( sensors[ i ].hasCustomFunction == 2
-			|| sensors[ i ].hasCustomFunction == 4 ){
+		else if( sensors[ i ].type == 2
+			|| sensors[ i ].type == 4 ){
 			JSONMessage += String( sensors[ i ].fValue );
 		}
 	}

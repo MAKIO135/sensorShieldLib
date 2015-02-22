@@ -73,11 +73,15 @@ float multBy2( int value ){
 }
 //...
 board.addSensor( "pot1", A0 );
-board.setSensorFunction( "pot1", multBy2 );
+board.setSensorProcess( "pot1", multBy2 );
 ```
 - Set minimun change needed on sensor value before updating its value and sending JSON:
 ```arduino
 board.setSensorSensitivity( "pot1", 10 );
+```
+- Send JSON on each loop by setting sensitivity to 0:
+```arduino
+board.setSensorSensitivity( 0 );
 ```
 - Set limit values of interest for a particular sensor:
 ```arduino
