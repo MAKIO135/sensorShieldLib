@@ -26,7 +26,7 @@ void SensorShield::initValues()
 	analogPinMin = A0;
 	analogPinMax = A5;
 	nbSensors = 0;
-	analogSensitivity = 1;
+	sensitivity = 1;
 	analogMin = 0;
 	analogMax = 1023;
 	indicatorLedPin = NULL;
@@ -61,6 +61,7 @@ void SensorShield::addSensor( String sensorID, int pin, int pinmode )
 		sensors[ nbSensors ].pin = pin;
 		sensors[ nbSensors ].value = 0;
 		sensors[ nbSensors ].fValue = 0;
+		sensors[ nbSensors ].sensitivity = sensitivity;
 		sensors[ nbSensors ].type = SIMPLE;
 
 		if( pin >= digitalPinMin && pin <= digitalPinMax ) {
@@ -92,13 +93,13 @@ void SensorShield::addAnalogSensor()
 {
 	sensors[ nbSensors ].isDigital = false;
 	sensors[ nbSensors ].invertValue = false;
-	sensors[ nbSensors ].analogSensitivity = analogSensitivity;
 	sensors[ nbSensors ].min = analogMin;
 	sensors[ nbSensors ].max = analogMax;
 }
 
 /////////////////////////////////////////////////////////////////////
-void SensorShield::addSensor( String sensorID, int( *custFunction )() ){
+void SensorShield::addSensor( String sensorID, int( *custFunction )() )
+{
 	sensors[ nbSensors ].sensorID = sensorID;
 	sensors[ nbSensors ].value = 0;
 	sensors[ nbSensors ].type = INT_FUNCTION;
@@ -106,7 +107,8 @@ void SensorShield::addSensor( String sensorID, int( *custFunction )() ){
 	nbSensors++;
 }
 
-void SensorShield::addSensor( String sensorID, float( *custFunction )() ){
+void SensorShield::addSensor( String sensorID, float( *custFunction )() )
+{
 	sensors[ nbSensors ].sensorID = sensorID;
 	sensors[ nbSensors ].fValue = 0;
 	sensors[ nbSensors ].type = FLOAT_FUNCTION;
@@ -115,21 +117,21 @@ void SensorShield::addSensor( String sensorID, float( *custFunction )() ){
 }
 
 /////////////////////////////////////////////////////////////////////
-void SensorShield::setSensorSensitivity( float sensitivity )
+void SensorShield::setSensorSensitivity( float _sensitivity )
 {
-	analogSensitivity = sensitivity;
+	sensitivity = _sensitivity;
 	for (int i = 0; i < nbSensors; ++i) {
 		if( sensors[ i ].isDigital == false ) {
-			sensors[ i ].analogSensitivity = sensitivity;
+			sensors[ i ].sensitivity = _sensitivity;
 		}
 	}
 }
 
-void SensorShield::setSensorSensitivity( String sensorID, float sensitivity )
+void SensorShield::setSensorSensitivity( String sensorID, float _sensitivity )
 {
 	for (int i = 0; i < nbSensors; ++i) {
 		if( sensors[ i ].sensorID == sensorID ) {
-			sensors[ i ].analogSensitivity = sensitivity;
+			sensors[ i ].sensitivity = _sensitivity;
 			return;
 		}
 	}
@@ -204,7 +206,7 @@ void SensorShield::emitLightOnChange( int ledPin )
 
 void SensorShield::emitLightOnChange( bool _turnLightOn )
 {
-	turnLightOn = _turnLightOn;	
+	turnLightOn = _turnLightOn;
 }
 
 void SensorShield::lightup()
@@ -222,7 +224,7 @@ void SensorShield::update()
 	float fTmpValue;
 
 	for (int i = 0; i < nbSensors; ++i) {
-		switch( sensors[ i ].type ){	
+		switch( sensors[ i ].type ){
 			case SIMPLE :
 				if( sensors[ i ].isDigital == true ) {
 					if( sensors[ i ].invertValue == true ) {
@@ -232,7 +234,7 @@ void SensorShield::update()
 						tmpValue = digitalRead( sensors[ i ].pin );
 					}
 
-					if( sensors[ i ].value != tmpValue ) {
+					if( abs( sensors[ i ].value - tmpValue ) >= sensors[ i ].sensitivity ) {
 						sensors[ i ].value = tmpValue;
 						hasNewValue = true;
 					}
@@ -245,7 +247,7 @@ void SensorShield::update()
 						tmpValue = analogRead( sensors[ i ].pin );
 					}
 
-					if( abs( sensors[ i ].value - tmpValue ) >= sensors[ i ].analogSensitivity ) {
+					if( abs( sensors[ i ].value - tmpValue ) >= sensors[ i ].sensitivity ) {
 						sensors[ i ].value = tmpValue;
 						
 						if( sensors[ i ].value >= sensors[ i ].min && sensors[ i ].value <= sensors[ i ].max ) {
@@ -260,7 +262,7 @@ void SensorShield::update()
 					tmpValue = digitalRead( sensors[ i ].pin );
 					tmpValue = ( *(sensors[i].customInt) )( tmpValue );
 
-					if( sensors[ i ].value != tmpValue ) {
+					if( abs( sensors[ i ].value - tmpValue ) >= sensors[ i ].sensitivity ) {
 						sensors[ i ].value = tmpValue;
 						hasNewValue = true;
 					}
@@ -269,7 +271,7 @@ void SensorShield::update()
 					tmpValue = analogRead( sensors[ i ].pin );
 					tmpValue = ( *(sensors[i].customInt) )( tmpValue );
 
-					if( abs( sensors[ i ].value - tmpValue ) >= sensors[ i ].analogSensitivity ) {
+					if( abs( sensors[ i ].value - tmpValue ) >= sensors[ i ].sensitivity ) {
 						sensors[ i ].value = tmpValue;
 						
 						if( sensors[ i ].value >= sensors[ i ].min && sensors[ i ].value <= sensors[ i ].max ) {
@@ -284,7 +286,7 @@ void SensorShield::update()
 					tmpValue = digitalRead( sensors[ i ].pin );
 					fTmpValue = ( *(sensors[i].customFloat) )( tmpValue );
 
-					if( sensors[ i ].fValue != fTmpValue ) {
+					if( abs( sensors[ i ].fValue - fTmpValue ) >= sensors[ i ].sensitivity ) {
 						sensors[ i ].fValue = fTmpValue;
 						hasNewValue = true;
 					}
@@ -293,7 +295,7 @@ void SensorShield::update()
 					tmpValue = analogRead( sensors[ i ].pin );
 					fTmpValue = ( *(sensors[i].customFloat) )( tmpValue );
 
-					if( abs( sensors[ i ].fValue - fTmpValue ) >= sensors[ i ].analogSensitivity ) {
+					if( abs( sensors[ i ].fValue - fTmpValue ) >= sensors[ i ].sensitivity ) {
 						sensors[ i ].fValue = fTmpValue;
 						
 						if( sensors[ i ].fValue >= sensors[ i ].min && sensors[ i ].fValue <= sensors[ i ].max ) {
@@ -306,7 +308,7 @@ void SensorShield::update()
 			case INT_FUNCTION :
 				tmpValue = ( *(sensors[i].customSensorInt) )();
 
-				if( abs( sensors[ i ].value - tmpValue ) >= sensors[ i ].analogSensitivity ) {
+				if( abs( sensors[ i ].value - tmpValue ) >= sensors[ i ].sensitivity ) {
 					sensors[ i ].value = tmpValue;
 					
 					hasNewValue = true;
@@ -316,7 +318,7 @@ void SensorShield::update()
 			case FLOAT_FUNCTION :
 				fTmpValue = ( *(sensors[i].customSensorFloat) )() ;
 
-				if( abs( sensors[ i ].fValue - fTmpValue ) >= sensors[ i ].analogSensitivity ) {
+				if( abs( sensors[ i ].fValue - fTmpValue ) >= sensors[ i ].sensitivity ) {
 					sensors[ i ].fValue = fTmpValue;
 					
 					hasNewValue = true;
@@ -366,6 +368,14 @@ int SensorShield::getSensorValue( String sensorID )
 	for (int i = 0; i < nbSensors; ++i) {
 		if( sensors[ i ].sensorID == sensorID ) {
 			return sensors[ i ].value;
+		}
+	}
+}
+float SensorShield::getSensorFValue( String sensorID )
+{
+	for (int i = 0; i < nbSensors; ++i) {
+		if( sensors[ i ].sensorID == sensorID ) {
+			return sensors[ i ].fValue;
 		}
 	}
 }

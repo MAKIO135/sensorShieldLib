@@ -8,8 +8,8 @@
  void SensorShield::addSensor( String sensorID, int( *custFunction )() );
  void SensorShield::addSensor( String sensorID, float( *custFunction )() );
 
- .you can use a custom function as a sensor
- .the custom function must return a float or an int
+ .you can use a function as a sensor
+ .the function must return a float or an int
 */
 
 #include <sensorShieldLib.h>

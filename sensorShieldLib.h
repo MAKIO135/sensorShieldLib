@@ -23,7 +23,7 @@ struct sensorStruct
 	int pin;
 	bool isDigital;
 	bool invertValue;
-	float analogSensitivity;
+	float sensitivity;
 	int value;
 	float fValue;
 	int min;
@@ -83,7 +83,7 @@ class SensorShield
 		
 		int nbSensors;
 		
-		int analogSensitivity;
+		int sensitivity;
 		int analogMin;
 		int analogMax;
 
