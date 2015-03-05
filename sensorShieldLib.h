@@ -69,6 +69,7 @@ class SensorShield
 		void update();
 
 		int getSensorValue( String sensorID );
+		float getSensorFValue( String sensorID );
 
 		bool hasNewValue;
 		String JSONMessage;
