@@ -21,6 +21,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		ofSerial serial;
+		char lastChar;
 		ofxJSONElement jsonEl;
 
         std::string json;
