@@ -1,0 +1,24 @@
+{
+  "name": "SensorShieldNodeWebSocketInterface",
+  "version": "0.0.1",
+  "description": "An example for working with the Arduino SensorShieldLib ( https://github.com/MAKIO135/sensorShieldLib ) in combination with node.js/io.js, directly from the browser or Processing via the use of WebSockets",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "arduino",
+    "SensorShieldLib",
+    "JSON",
+    "WebSocket",
+    "browser",
+    "Processing"
+  ],
+  "author": "Sebastien Courvoisier @LePhasme",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "serialport": "1.6.x",
+    "express": "4.x.x",
+    "ws": "0.7.x"
+  }
+}
