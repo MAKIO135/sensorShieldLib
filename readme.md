@@ -93,7 +93,7 @@ board.emitlightOnChange( 13 );
 ```
 - ... And to turn it on/off if desired:
 ```arduino
-board.emitlightOnChange( false );
+board.emitLightOnChange( false );
 ```
 - Reads all digital/analog sensors on update and automatically send JSON on changes:
 ```arduino
