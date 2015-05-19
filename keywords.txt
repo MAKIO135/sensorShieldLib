@@ -17,6 +17,7 @@ setSensorFunction	KEYWORD2
 update	KEYWORD2
 emitLightOnChange	KEYWORD2
 getSensorValue	KEYWORD2
+getSensorFValue	KEYWORD2
 JSONMessage	KEYWORD2
 hasNewValue	KEYWORD2
 
