@@ -89,7 +89,7 @@ board.setSensorLimits( "pot1", 150, 850 );
 ```
 - Possibility to add a visual signal when sending JSON with a led ...:
 ```arduino
-board.emitlightOnChange( 13 );
+board.emitLightOnChange( 13 );
 ```
 - ... And to turn it on/off if desired:
 ```arduino
