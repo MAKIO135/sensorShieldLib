@@ -102,6 +102,7 @@ void SensorShield::addSensor( String sensorID, int( *custFunction )() )
 {
 	sensors[ nbSensors ].sensorID = sensorID;
 	sensors[ nbSensors ].value = 0;
+	sensors[ nbSensors ].sensitivity = sensitivity;
 	sensors[ nbSensors ].type = INT_FUNCTION;
 	sensors[ nbSensors ].customSensorInt = custFunction;
 	nbSensors++;
@@ -111,6 +112,7 @@ void SensorShield::addSensor( String sensorID, float( *custFunction )() )
 {
 	sensors[ nbSensors ].sensorID = sensorID;
 	sensors[ nbSensors ].fValue = 0;
+	sensors[ nbSensors ].sensitivity = sensitivity;
 	sensors[ nbSensors ].type = FLOAT_FUNCTION;
 	sensors[ nbSensors ].customSensorFloat = custFunction;
 	nbSensors++;
