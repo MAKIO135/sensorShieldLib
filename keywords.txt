@@ -14,6 +14,7 @@ setSensorSensitivity	KEYWORD2
 setSensorLimits	KEYWORD2
 invertSensorValue	KEYWORD2
 setSensorFunction	KEYWORD2
+setSensorProcess	KEYWORD2
 update	KEYWORD2
 emitLightOnChange	KEYWORD2
 getSensorValue	KEYWORD2
