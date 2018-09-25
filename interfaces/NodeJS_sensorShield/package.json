@@ -14,6 +14,6 @@
   "author": "Lionel Radisson @Makio135",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "serialport": "^1.5.0"
+    "serialport": "^7.0.2"
   }
 }

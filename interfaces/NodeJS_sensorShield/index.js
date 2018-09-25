@@ -1,16 +1,33 @@
-var serialport = require( "serialport" );
-var SerialPort = serialport.SerialPort;
+const SerialPort = require( 'serialport' )
+const Readline = require( '@serialport/parser-readline' )
 
-var serialPort = new SerialPort( "/dev/ttyACM0", {
-	baudrate: 9600,
-	parser: serialport.parsers.readline( "\n" )
-} );
+// check your Serial port name with Arduino IDE
+const port = new SerialPort( "/dev/cu.usbserial-ADAQJDL70", {
+	baudRate: 9600
+} )
 
-serialPort.on( "open", function () {
-	console.log( "open" );
-	serialPort.on( "data", function( data ) {
-		// console.log( "data received: " + data );
-		var json = JSON.parse( data );
-		console.log( json.btn1 );
-	} );
-} );
+const parser = port.pipe( new Readline() )
+parser.on( 'data', data => {
+	const json = JSON.parse( data );
+	console.log( `seconds: ${ json.seconds }` )
+} )
+
+/*
+	// Arduino Code:
+	#include <sensorShieldLib.h>
+
+	SensorShield board;
+
+	int secondsPassed() {
+		return millis() / 1000 ;
+	}
+
+	void setup() {
+		board.init();
+		board.addSensor( "seconds", secondsPassed );
+	}
+
+	void loop() {
+		board.update(); // {"seconds":15}
+	}
+*/
