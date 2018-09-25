@@ -1,10 +1,10 @@
-#SensorShieldLib  
+# SensorShieldLib  
 Easilly attach and communicate sensors value in JSON.  
 ___
 ![SensorShield](SensorShield.jpg)
 
 ___
-###Example:
+### Example:
 
 ![Example](examples/SensorShield101/SensorShieldLib.png)
 
@@ -13,8 +13,7 @@ ___
 
 SensorShield board;
 
-void setup()
-{
+void setup(){
 	board.init(); // initialises and starts Serial
 
 	board.addSensor( "btn1", 2 );
@@ -22,15 +21,14 @@ void setup()
 	board.addSensor( "pot1", A0 );
 }
 
-void loop()
-{
+void loop(){
 	board.update();
 }
 ```
 On `board.update();`, the lib checks sensors values and if any changed from previous `loop`, outputs JSON on Serial 9600 bds: `{"btn1":1,"btn2":0,"pot1":768}`
 
 ___
-###Features
+### Features
 - A SensorShield class:
 ```arduino
 SensorShield board;
