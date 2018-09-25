@@ -5,13 +5,13 @@ void ofApp::setup(){
     serial.listDevices();
     vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
     int baud = 9600;
-    serial.setup("/dev/ttyACM0", baud);
+    serial.setup( "/dev/cu.usbserial-ADAQJDL70", baud );
     json = "";
+    pot1 = 0;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
     if( serial.available() ){
         //cout << "\tavailable: " << ofToString( serial.available() ) << endl;
         while( serial.available() ){
@@ -25,17 +25,17 @@ void ofApp::update(){
             std::cout << "parsingSuccessful: " << ofToString( parsingSuccessful ) << std::endl;
 
             if( parsingSuccessful ){
-                ofLog() << "btnA: " + ofToString( jsonEl[ "btnA" ] );
+                pot1 = jsonEl[ "pot1" ].asInt();
+                ofLog() << "pot1: " << pot1 << std::endl;
             }
             json = "";
         }
     }
-
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    ofBackground( pot1 / 4 );
 }
 
 //--------------------------------------------------------------

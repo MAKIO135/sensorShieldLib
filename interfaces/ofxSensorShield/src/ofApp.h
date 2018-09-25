@@ -22,8 +22,8 @@ class ofApp : public ofBaseApp{
 
 		ofSerial serial;
 		char lastChar;
-		ofxJSONElement jsonEl;
 
+		ofxJSONElement jsonEl;
         std::string json;
-//        bool parsingSuccessful;
+		int pot1;
 };
