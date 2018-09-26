@@ -8,19 +8,19 @@ const settings = {
 // Setting up the HTTP server:
 const express = require( 'express' )
 const app = express()
+const http = require( 'http' ).Server( app )
 
-app.use( express.static( `${ __dirname }/public` ) )
+app.use( express.static( `${__dirname }/public` ) )
 
 app.get( '/', ( req, res ) => {
-	res.sendFile( `index.html` )
+	res.sendFile( 'index.html' )
 } )
 
-const listener = app.listen( settings.httpPort, () => {
-	console.log( 'Your app is listening on port ' + listener.address().port )
+http.listen( settings.httpPort, () => {
+	console.log( `Your app is listening on port ${ settings.httpPort }` )
 } )
 
 // Setting up websockets with socket.io
-const http = require( 'http' ).Server( app )
 const io = require( 'socket.io' )( http )
 
 // Setting up the Serial connection:
