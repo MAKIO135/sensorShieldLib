@@ -17,8 +17,7 @@ enum SensorType {
 	FLOAT_FUNCTION // float function working as sensor
 };
 
-struct sensorStruct
-{
+struct sensorStruct {
 	String sensorID;
 	int pin;
 	bool isDigital;
@@ -35,41 +34,40 @@ struct sensorStruct
 	float (*customSensorFloat)();
 };
 
-class SensorShield
-{
+class SensorShield {
 	public:
 		SensorShield();
 
 		void init();
-		void init( Stream &stream );
+		void init(Stream &stream);
 
-		void setDigitalPinsRange( int pinMin, int pinMax );
-		void setAnalogPinsRange( int pinMin, int pinMax );
+		void setDigitalPinsRange(int pinMin, int pinMax);
+		void setAnalogPinsRange(int pinMin, int pinMax);
 
-		void addSensor( String sensorID, int pin);
-		void addSensor( String sensorID, int pin, int mode );
+		void addSensor(String sensorID, int pin);
+		void addSensor(String sensorID, int pin, int mode);
 
-		void addSensor( String sensorID, int( *custFunction )() );
-		void addSensor( String sensorID, float( *custFunction )() );
+		void addSensor(String sensorID, int(*custFunction)());
+		void addSensor(String sensorID, float(*custFunction)());
 
-		void setSensorSensitivity( float sensitivity );
-		void setSensorSensitivity( String sensorID, float sensitivity );
+		void setSensorSensitivity(float sensitivity);
+		void setSensorSensitivity(String sensorID, float sensitivity);
 
-		void setSensorLimits( int min, int max );
-		void setSensorLimits( String sensorID, int min, int max );
+		void setSensorLimits(int min, int max);
+		void setSensorLimits(String sensorID, int min, int max);
 
-		void invertSensorValue( String sensorID );
+		void invertSensorValue(String sensorID);
 
-		void setSensorProcess( String sensorID, int( *custFunction )( int ) );
-		void setSensorProcess( String sensorID, float( *custFunction )( int ) );
+		void setSensorProcess(String sensorID, int(*custFunction)(int));
+		void setSensorProcess(String sensorID, float(*custFunction)(int));
 
-		void emitLightOnChange( int ledPin );
-		void emitLightOnChange( bool turnLightOn );
+		void emitLightOnChange(int ledPin);
+		void emitLightOnChange(bool turnLightOn);
 
 		void update();
 
-		int getSensorValue( String sensorID );
-		float getSensorFValue( String sensorID );
+		int getSensorValue(String sensorID);
+		float getSensorFValue(String sensorID);
 
 		bool hasNewValue;
 		String JSONMessage;
@@ -91,10 +89,10 @@ class SensorShield
 		int indicatorLedPin;
 		bool turnLightOn;
 
-		sensorStruct sensors[ MAX_NUMBER_OF_SENSORS ];
+		sensorStruct sensors[MAX_NUMBER_OF_SENSORS];
 
 		void initValues();
-		void addDigitalSensor( int pin, int mode );
+		void addDigitalSensor(int pin, int mode);
 		void addAnalogSensor();
 		void lightup();
 		void createJSON();
