@@ -198,7 +198,7 @@ void SensorShield::lightup() {
 }
 
 /////////////////////////////////////////////////////////////////////
-void SensorShield::update() {
+void SensorShield::update(bool printJSON) {
 	hasNewValue = false;
 	int tmpValue;
 	float fTmpValue;
@@ -308,8 +308,12 @@ void SensorShield::update() {
 	}
 	
 	if(hasNewValue) {
-		sendJSON();
+		createJSON();
+		if(printJSON) sendJSON();
 	}
+}
+void SensorShield::update() {
+	update(true);
 }
 
 void SensorShield::createJSON() {
@@ -333,8 +337,6 @@ void SensorShield::createJSON() {
 }
 
 void SensorShield::sendJSON() {
-	createJSON();
-
 	SensorShieldStream->println(JSONMessage);
 
 	if(turnLightOn && indicatorLedPin != NULL) lightup();

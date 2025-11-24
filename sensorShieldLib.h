@@ -65,6 +65,7 @@ class SensorShield {
 		void emitLightOnChange(bool turnLightOn);
 
 		void update();
+		void update(bool printJSON);
 
 		int getSensorValue(String sensorID);
 		float getSensorFValue(String sensorID);
